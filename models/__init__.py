@@ -1,5 +1,8 @@
 #!/usr/bin/python3
-"""Instance method that initialize a new created object"""
+"""Isnitialize the package"""
 from models.engine.file_storage import FileStorage
+
+
 storage = FileStorage()
+
 storage.reload()
