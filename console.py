@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 """Programm contains the entry point of the command interpreter.
 """
 import cmd
@@ -165,6 +165,8 @@ def do_count(self, arg):
 def default(self, line):
         """check commands if nothing else matche """
         self._precmd(line)
+    
+def _precmd(self, arg):
 
 if __name__ == '__main__':
     HBNBCommand().cmdloop()
