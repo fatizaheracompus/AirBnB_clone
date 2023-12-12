@@ -3,15 +3,31 @@
 
 import uuid
 from datetime import datetime
+import models
 
 
 class BaseModel:
     """Class defines all common attributes for other class"""
 
-    def __init__(self):
-        self.id = str(uuid.uuid4())
-        self.created_at = datetime.utcnow()
-        self.updated_at = datetime.utcnow()
+    def __init__(self, *args, **kwargs):
+        """Method that initialize instance attribuer"""
+
+        tm_format = "%Y-%m-%dT%H:%M:%S.%f"
+        if kwargs is not None and kwargs != {}:
+            for key in kwargs:
+                if key == "created_at":
+                    self.__dict__["created_at"] = datetime.strptime(
+                            kwargs["created_at"], tm_format)
+                elif key == "updated_at":
+                    self.__dict__["updated_at"] = datetime.strptime(
+                            kwargs["updated_at"], tm_format)
+                else:
+                    self.__dict__[key] = kwargs[key]
+        else:
+            self.id = str(uuid.uuid4())
+            self.created_at = datetime.utcnow()
+            self.updated_at = datetime.utcnow()
+            storage.new(self)
 
     def __str__(self):
         """Should print official string representation"""
