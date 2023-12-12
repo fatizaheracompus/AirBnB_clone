@@ -34,7 +34,7 @@ class HBNBCommand(cmd.Cmd):
         """Command shouldn’t execute anything on ENTER.
         """
         pass
- def do_create(self, arg):
+    def do_create(self, arg):
         """Creates a new instance of BaseModel and save it.
         """
         wrd = shlex.split(arg)
@@ -93,11 +93,11 @@ class HBNBCommand(cmd.Cmd):
              if wrd[0] not in storage.classes():
                   print("** class doesn't exist **")
              else:
-                  als = [str(obj) for name, obj in storage.all().items()]
-                          if type(obj).__name__ == wrd[0]]
+                  als = [str(obj) for key, obj in storage.all().items()
+                  if type(obj).__name__ == wrd[0]]
                   print(als)
          else:
-                  nw_list = [str(obj) for name, obj in storage.all().items()]
+                  nw_list = [str(obj) for key, obj in storage.all().items()]
                   print(nw_list)
 
     def do_update(self, arg):
@@ -108,65 +108,63 @@ class HBNBCommand(cmd.Cmd):
             print("** class name missing **")
             return
 
-        rexe = r'^(\S+)(?:\s(\S+)(?:\s(\S+)(?:\s((?:"[^"]*")|(?:(\S)+)))?)?)?'
-        mat = re.search(rexe, arg)
-        classename = mat.grp(1)
-        uid = mat.grp(2)
-        attribute = mat.grp(3)
-        value = mat.grp(4)
-        if not mat:
-            print("** class name missing **")
-        elif classename not in storage.classes():
-            print("** class doesn't exist **")
-        elif uid is None:
-            print("** instance id missing **")
-        else:
-            name = "{}.{}".format(classename, uid)
-            if name not in storage.all():
-                print("** no instance found **")
-            elif not attribute:
-                print("** attribute name missing **")
-            elif not value:
-                print("** value missing **")
-            else:
-                ct = None
-                if not re.search('^".*"$', value):
-                    if '.' in value:
-                        ct = float
-                    else:
-                        ct = int
-                else:
-                    value = value.replace('"', '')
-                attributs = storage.attributs()[classename]
-                if attribute in attributs:
-                    value = attributs[attribute](value)
-                elif ct:
-                    try:
-                        value = ct(value)
-                    except ValueError:
-                        pass
-                setattr(storage.all()[name], attribute, value)
-                storage.all()[name].save()
+          rex = r'^(\S+)(?:\s(\S+)(?:\s(\S+)(?:\s((?:"[^"]*")|(?:(\S)+)))?)?)?'
+          mat = re.search(rex, arg)
+          classename = mat.grp(1)
+          uid = mat.grp(2)
+          attribute = mat.grp(3)
+          value = mat.grp(4)
+          if not mat:
+              print("** class name missing **")
+          elif classename not in storage.classes():
+              print("** class doesn't exist **")
+          elif uid is None:
+              print("** instance id missing **")
+          else:
+              key = "{}.{}".format(classename, uid)
+              if name not in storage.all():
+                  print("** no instance found **")
+              elif not attribute:
+                  print("** attribute name missing **")
+              elif not value:
+                  print("** value missing **")
+              else:
+                  ct = None
+              if not re.search('^".*"$', value):
+                  if '.' in value:
+                      ct = float
+                  else:
+                      ct = int
+              else:
+                      value = value.replace('"', '')
+                      attributs = storage.attributs()[classename]
+                      if attribute in attributs:
+                          value = attributs[attribute](value)
+                      elif ct:
+                          try:
+                              value = ct(value)
+                          except ValueError:
+                              pass
+                          setattr(storage.all()[key], attribute, value)
+                          storage.all()[key].save()
 
 def do_count(self, arg):
     """Counts the numbers of instances
     """
-     wrd = arg.split(' ')
-        if not wwrd[0]:
-            print("** class name missing **")
-        elif wrd[0] not in storage.classes():
-            print("** class doesn't exist **")
-        else:
-            mat = [
+    wrd = arg.split(' ')
+    if not wrd[0]:
+        print("** class name missing **")
+    elif wrd[0] not in storage.classes():
+        print("** class doesn't exist **")
+    else:
+        mat = [
                 j for j in storage.all() if j.startswith(
                     wrd[0] + '.')]
-            print(len(mat))
+        print(len(mat))
 
 def default(self, line):
         """check commands if nothing else matche """
-        self._precmd(line)
-    
-def _precmd(self, arg):
+        self._precmd
 
 if __name__ == '__main__':
     HBNBCommand().cmdloop()
